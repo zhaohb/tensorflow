@@ -1393,6 +1393,7 @@ def main():
       set_trisycl_include_dir(environ_cp)
 
   set_action_env_var(environ_cp, 'TF_NEED_CUDA', 'CUDA', False)
+  set_action_env_var(environ_cp, 'TF_NEED_FPGA', 'FPGA', True)
   if (environ_cp.get('TF_NEED_CUDA') == '1' and
       'TF_CUDA_CONFIG_REPO' not in environ_cp):
     set_tf_cuda_version(environ_cp)

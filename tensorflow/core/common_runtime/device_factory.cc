@@ -104,6 +104,18 @@ Status DeviceFactory::AddDevices(const SessionOptions& options,
     return errors::NotFound("No CPU devices are available in this process");
   }
 
+//------added by zhaohb-----
+#if 0
+  init_size = devices->size();
+  auto fpga_factory = GetFactory("FPGA");
+  if (fpga_factory) {
+    TF_RETURN_IF_ERROR(fpga_factory->CreateDevices(options, name_prefix, devices));
+  }
+  if (devices->size() == init_size) {
+    return errors::NotFound("No FPGA devices are available in this process");
+  }
+#endif
+
   // Then the rest (including GPU).
   mutex_lock l(*get_device_factory_lock());
   for (auto& p : device_factories()) {

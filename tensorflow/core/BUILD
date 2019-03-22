@@ -654,6 +654,7 @@ tf_gen_op_libs(
 # And one for all user ops
 cc_library(
     name = "user_ops_op_lib",
+    hdrs = ["user_ops/*.h"],
     srcs = glob(["user_ops/**/*.cc"]),
     copts = tf_copts(),
     linkstatic = 1,
@@ -2047,6 +2048,7 @@ CORE_CPU_LIB_HEADERS = CORE_CPU_BASE_HDRS + [
     "common_runtime/stats_publisher_interface.h",
     "common_runtime/step_stats_collector.h",
     "common_runtime/threadpool_device.h",
+    "common_runtime/threadpiscine_device.h",
     "common_runtime/visitable_allocator.h",
     "graph/gradients.h",
     "graph/quantize_training.h",
@@ -2088,7 +2090,9 @@ tf_cuda_library(
         "common_runtime/stats_publisher_interface.cc",
         "common_runtime/step_stats_collector.cc",
         "common_runtime/threadpool_device.cc",
+        "common_runtime/threadpiscine_device.cc",
         "common_runtime/threadpool_device_factory.cc",
+        "common_runtime/threadpiscine_device_factory.cc",
         "graph/gradients.cc",
         "graph/mkl_layout_pass.cc",
         "graph/mkl_tfconversion_pass.cc",

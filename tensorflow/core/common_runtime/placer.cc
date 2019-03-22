@@ -292,6 +292,7 @@ class ColocationGraph {
                            std::vector<Device*>** possible_devices) {
     *possible_devices = nullptr;
     const int node_root = FindRoot(node->id());
+    printf("node_root: %d\n", node_root);
     if (!members_[node_root].possible_devices.empty()) {
       *possible_devices = &members_[node_root].possible_devices;
       return Status::OK();

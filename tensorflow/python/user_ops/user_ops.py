@@ -28,3 +28,5 @@ from tensorflow.python.ops.gen_user_ops import *  # pylint: disable=wildcard-imp
 def my_fact():
   """Example of overriding the generated code for an Op."""
   return _gen_user_ops._fact()  # pylint: disable=protected-access
+def vect_add(arg_a, arg_b):
+    return _gen_user_ops._vect_add(arg_a, arg_b)

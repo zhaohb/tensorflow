@@ -383,6 +383,7 @@ StringSplit
 
 # user_ops
 Fact
+VectAdd
 
 # training_ops
 # (None)

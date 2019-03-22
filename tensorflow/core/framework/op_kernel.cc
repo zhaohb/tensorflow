@@ -1009,7 +1009,9 @@ string KernelsRegisteredForOp(StringPiece op_name) {
   for (const auto& key_registration : *GlobalKernelRegistryTyped()) {
     const KernelDef& kernel_def(key_registration.second.def);
     if (kernel_def.op() == op_name) {
+      printf("----------zhaohb--kernel_def.op:%s\n", kernel_def.op().c_str());
       strings::StrAppend(&ret, "  device='", kernel_def.device_type(), "'");
+      printf("-----------zhaohb--ret:%s\n", ret.c_str());
       if (!kernel_def.label().empty()) {
         strings::StrAppend(&ret, "; label='", kernel_def.label(), "'");
       }

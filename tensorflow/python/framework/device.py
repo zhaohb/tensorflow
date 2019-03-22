@@ -79,7 +79,7 @@ class DeviceSpec(object):
     self.job = job
     self.replica = replica
     self.task = task
-    if device_type == "cpu" or device_type == "gpu":
+    if device_type == "cpu" or device_type == "gpu" or device_type == "fpga":
       # For backwards compatibility only, we support lowercase variants of
       # cpu and gpu but turn them into uppercase here.
       self.device_type = device_type.upper()
@@ -157,7 +157,7 @@ class DeviceSpec(object):
         elif ly == 2 and y[0] == "task":
           self.task = y[1]
         elif ((ly == 1 or ly == 2) and
-              ((y[0].upper() == "GPU") or (y[0].upper() == "CPU"))):
+              ((y[0].upper() == "GPU") or (y[0].upper() == "CPU") or (y[0].upper() == "FPGA"))):
           if self.device_type is not None:
             raise ValueError("Cannot specify multiple device types: %s" % spec)
           self.device_type = y[0].upper()

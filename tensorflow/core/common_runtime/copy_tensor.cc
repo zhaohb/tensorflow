@@ -109,7 +109,9 @@ void CopyDeviceToHost(const Tensor* input, Allocator* cpu_allocator,
                       Allocator* out_allocator, StringPiece edge_name,
                       Device* src, Tensor* output,
                       DeviceContext* send_dev_context, StatusCallback done) {
+  printf("%s (%d) - <%s>\n",__FILE__,__LINE__,__FUNCTION__);
   if (input->dtype() == DT_VARIANT) {
+    printf("%s (%d) - <%s>\n",__FILE__,__LINE__,__FUNCTION__);
     Tensor copy(cpu_allocator, DT_VARIANT, input->shape());
     auto* status_cb = new ReffedStatusCallback(std::move(done));
     core::ScopedUnref status_cb_unref(status_cb);
@@ -134,6 +136,7 @@ void CopyDeviceToHost(const Tensor* input, Allocator* cpu_allocator,
           if (status_cb->ok()) {
             status_cb->Ref();
             *to = Tensor(out_allocator, from.dtype(), from.shape());
+            printf("%s (%d) - <%s>\n",__FILE__,__LINE__,__FUNCTION__);
             send_dev_context->CopyDeviceTensorToCPU(&from, edge_name, src, to,
                                                     wrapped_done_);
             return Status::OK();
@@ -147,6 +150,7 @@ void CopyDeviceToHost(const Tensor* input, Allocator* cpu_allocator,
     Variant* v_out = copy.flat<Variant>().data();
     Status s_copy_init;
     for (int64 i = 0; i < input->NumElements(); ++i) {
+      printf("%s (%d) - <%s>\n",__FILE__,__LINE__,__FUNCTION__);
       s_copy_init = VariantDeviceCopy(
           VariantDeviceCopyDirection::DEVICE_TO_HOST, v[i], &v_out[i], copier);
       if (!s_copy_init.ok()) {
@@ -158,6 +162,7 @@ void CopyDeviceToHost(const Tensor* input, Allocator* cpu_allocator,
       *output = std::move(copy);
     }
   } else {
+    printf("%s (%d) - <%s>\n",__FILE__,__LINE__,__FUNCTION__);
     send_dev_context->CopyDeviceTensorToCPU(input, edge_name, src, output,
                                             std::move(done));
   }
@@ -244,7 +249,8 @@ void CopyTensor::ViaDMA(StringPiece edge_name, DeviceContext* send_dev_context,
       src_alloc_attr.on_host() ? DEVICE_CPU : src->attributes().device_type());
   const DeviceType dst_device_type(
       dst_alloc_attr.on_host() ? DEVICE_CPU : dst->attributes().device_type());
-  const bool non_cpu_src = src_device_type != DeviceType(DEVICE_CPU);
+  const bool non_cpu_src = (src_device_type != DeviceType(DEVICE_CPU)) && \
+                            (src_device_type != DeviceType(DEVICE_FPGA));
   const bool non_cpu_dst = dst_device_type != DeviceType(DEVICE_CPU);
 
   // TODO(phawkins): choose an allocator optimal for both the src and dst
@@ -301,6 +307,7 @@ void CopyTensor::ViaDMA(StringPiece edge_name, DeviceContext* send_dev_context,
                            std::move(delete_and_done_));
         },
         std::move(delete_and_done), std::placeholders::_1);
+    printf("%s (%d) - <%s>\n",__FILE__,__LINE__,__FUNCTION__);
     CopyDeviceToHost(input, cpu_allocator, out_allocator, edge_name, src,
                      cpu_tensor, send_dev_context,
                      std::move(then_copy_to_other_device));
@@ -310,6 +317,7 @@ void CopyTensor::ViaDMA(StringPiece edge_name, DeviceContext* send_dev_context,
   // E.g., gpu -> cpu
   if (non_cpu_src && !non_cpu_dst) {
     // Device to host copy.
+    printf("%s (%d) - <%s>\n",__FILE__,__LINE__,__FUNCTION__);
     CopyDeviceToHost(input, cpu_allocator, out_allocator, edge_name, src,
                      output, send_dev_context, std::move(done));
     return;
